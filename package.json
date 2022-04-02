@@ -1,0 +1,19 @@
+{
+  "name": "admin-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "geektrust.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snjakhar/Admin-Ui.git"
+  },
+  "author": "Srinivas Jakhar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snjakhar/Admin-Ui/issues"
+  },
+  "homepage": "https://github.com/snjakhar/Admin-Ui#readme"
+}
