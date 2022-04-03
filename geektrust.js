@@ -1,16 +1,16 @@
 const tableBody = document.querySelector("tbody");
+const pagination = document.getElementById("pagination");
 const DELETE_SELECTED_BUTTON = document.getElementById("delete-selected");
 var data = [];
-const selected_itemIds = new Set();
 
+const selected_itemIds = new Set();
 const getData = async () => {
   const url =
     "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json";
   try {
     const response = await fetch(url);
     data = await response.json();
-    console.log(data);
-    page(2);
+    pages(data);
   } catch (error) {
     console.log("Error from fetching data:", error);
   }
@@ -25,24 +25,45 @@ const addDataToTable = (data) => {
     const tr = createHtmlTag("tr", tableBody);
     const td1 = createHtmlTag("td", tr);
     const checkBox = createHtmlTag("input", td1, { type: "checkbox" });
-    checkBox.addEventListener("change", () => selected_itemIds.add(id));
+    checkBox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        selected_itemIds.add(id);
+        tr.style.backgroundColor = "grey";
+      } else {
+        tr.style.backgroundColor = "";
+        selected_itemIds.delete(id);
+      }
+    });
     const td2 = createHtmlTag("td", tr);
-    createHtmlTag("input", td2, { type: "text", value: name, disabled: true });
+    createHtmlTag("input", td2, {
+      type: "text",
+      value: name,
+      disabled: true,
+    });
     const td3 = createHtmlTag("td", tr);
-    createHtmlTag("input", td3, { type: "text", value: email, disabled: true });
+    createHtmlTag("input", td3, {
+      type: "text",
+      value: email,
+      disabled: true,
+    });
     const td4 = createHtmlTag("td", tr);
-    createHtmlTag("input", td4, { type: "text", value: role, disabled: true });
+    createHtmlTag("input", td4, {
+      type: "text",
+      value: role,
+      disabled: true,
+    });
     const td5 = createHtmlTag("td", tr);
     const editButton = createHtmlTag("button", td5);
     editButton.innerHTML = editIcon;
     const deleteButton = createHtmlTag("button", td5);
     deleteButton.innerHTML = deleteIcon;
     editButton.addEventListener("click", () => {
+      tr.style.backgroundColor = "grey";
       handleEditButton(tr);
     });
     deleteButton.addEventListener("click", () => {
       selected_itemIds.add(id);
-      deleteRows(data);
+      deleteRows();
     });
   });
 };
@@ -62,37 +83,82 @@ const handleEditButton = (tr) => {
   tr.children[3].children[0].disabled = false;
 };
 
-const deleteRows = (data) => {
-  console.log(selected_itemIds);
-  const newData = data.filter((item) => {
+const deleteRows = () => {
+  data = data.filter((item) => {
     return !selected_itemIds.has(item.id);
   });
-  addDataToTable(newData);
+  pages(data);
 };
 const searchBox = document.getElementById("search-data");
-searchBox.addEventListener("blur", (e) => {
-  let serachInput = e.target.value;
+searchBox.addEventListener("input", (e) => {
+  let serachInput = e.target.value.toLowerCase();
+  console.log("here", serachInput);
+  if (serachInput === "") {
+    return pages(data);
+  }
   let newArr = data.filter(({ name, email, role }) => {
+    let [firstName, lastName] = name.split(" ");
     return (
-      serachInput === name || serachInput === email || serachInput === role
+      serachInput === firstName.toLowerCase() ||
+      serachInput === lastName.toLowerCase() ||
+      serachInput === email.toLowerCase() ||
+      serachInput === role.toLowerCase()
     );
   });
-  addDataToTable(newArr);
+
+  pages(newArr);
 });
 
 DELETE_SELECTED_BUTTON.addEventListener("click", () => {
-  deleteRows(data);
+  if (selected_itemIds.size) deleteRows(data);
 });
-function page(pageNum) {
-  console.log("herte", data);
-  let newArr = [];
-  let size = 5;
-  let start = (pageNum - 1) * size;
-  let end = start + 10;
-  for (let i = start; i <= end; i++) {
-    newArr.push(data[i]);
+
+const pages = (data) => {
+  pagination.innerHTML = "";
+  let length = data.length;
+  let size = 10;
+  let totalPage = Math.ceil(length / size);
+  pageData(0, 10, data);
+  let prevButton = createHtmlTag("button", pagination);
+  prevButton.innerHTML = "<";
+  let currentPage = 0;
+  for (let pageNumber = 1; pageNumber <= totalPage; pageNumber++) {
+    let button = createHtmlTag("button", pagination);
+    let start = (pageNumber - 1) * size;
+    let end = start + size;
+    button.addEventListener("click", () => {
+      currentPage = pageNumber;
+      pageData(start, end, data);
+    });
+
+    button.innerHTML = pageNumber;
   }
-  console.log(newArr);
-  addDataToTable(newArr);
+  prevButton.addEventListener("click", () => {
+    console.log(currentPage);
+    if (currentPage <= 1) return;
+    currentPage = currentPage - 1;
+
+    let start = (currentPage - 1) * size;
+    let end = start + size;
+    pageData(start, end, data);
+  });
+  let nextButton = createHtmlTag("button", pagination);
+  nextButton.innerHTML = ">";
+  nextButton.addEventListener("click", () => {
+    if (currentPage >= totalPage) return;
+
+    let start = currentPage * size;
+    let end = start + size;
+    pageData(start, end, data);
+    currentPage = currentPage + 1;
+  });
+};
+
+function pageData(start, end, data) {
+  console.log(start, end);
+  let particualrPageData = [];
+  for (let j = start; j < end && data[j]; j++) {
+    particualrPageData.push(data[j]);
+  }
+  addDataToTable(particualrPageData);
 }
-page(1);

@@ -1,0 +1,43 @@
+body {
+  background-color: #03c9a9;
+  box-sizing: border-box;
+  color: #13253a;
+}
+#search-data {
+  width: 90%;
+  padding: 8px;
+}
+.container {
+  display: flex;
+
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+button {
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+}
+thead {
+  text-align: center;
+  font-weight: bolder;
+}
+h4 {
+  line-height: 20px;
+  margin: 0px;
+  font-size: large;
+  font-family: 'Courier New', Courier, monospace;
+}
+#pagination button {
+  margin-left: 10px;
+  border-radius: 50%;
+}
+th,td{
+    padding: 5px;
+}
+button:focus{
+   background-color: goldenrod;
+}

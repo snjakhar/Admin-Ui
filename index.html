@@ -5,18 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GeekTrsut</title>
-    <script src="https://kit.fontawesome.com/9be9536008.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./index.css" />
+    <script
+      src="https://kit.fontawesome.com/9be9536008.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    
     <div class="container">
-      <input id="search-data" type="text" placeholder="Search by name,email or role" />
-      
+      <h4>GeekTrust</h4>
+      <input
+        id="search-data"
+        type="text"
+        placeholder="Search by name,email or role"
+      />
+
       <table>
         <thead>
           <tr>
             <td>Select</td>
-        
             <td>Name</td>
             <td>Email</td>
             <td>Role</td>
@@ -25,22 +32,15 @@
         </thead>
         <tbody></tbody>
       </table>
-      <Button id="delete-selected">Delete Selected</Button>
-      <div class="pagination">
-        <a href="#">&laquo;</a>
-        <a href="#">1</a>
-        <a href="#" class="active">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">6</a>
-        <a href="#">&raquo;</a>
+      <button id="delete-selected">Delete Selected</button>
+      <div id="pagination">
+      
       </div>
     </div>
   </body>
 </html>
 <script src="geektrust.js"></script>
 <script>
-    let btn=document.getElementById('btn')
-    btn.innerText="raja"
+  let btn = document.getElementById("btn");
+  btn.innerText = "raja";
 </script>
