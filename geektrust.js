@@ -89,24 +89,33 @@ const deleteRows = () => {
   });
   pages(data);
 };
+var clearId;
 const searchBox = document.getElementById("search-data");
 searchBox.addEventListener("input", (e) => {
+  
   let serachInput = e.target.value.toLowerCase();
   console.log("here", serachInput);
   if (serachInput === "") {
     return pages(data);
   }
-  let newArr = data.filter(({ name, email, role }) => {
-    let [firstName, lastName] = name.split(" ");
-    return (
-      serachInput === firstName.toLowerCase() ||
-      serachInput === lastName.toLowerCase() ||
-      serachInput === email.toLowerCase() ||
-      serachInput === role.toLowerCase()
-    );
-  });
+   clearTimeout(clearId)
+   clearId=setTimeout(() => { 
+    console.log("set timeout")
+    let newArr = data.filter(({ name, email, role }) => {
+      let [firstName, lastName] = name.split(" ");
 
-  pages(newArr);
+      return (
+        serachInput===firstName[0].toLowerCase()||
+        serachInput === firstName.toLowerCase() ||
+        serachInput === lastName.toLowerCase() ||
+        serachInput === email.toLowerCase() ||
+        serachInput === role.toLowerCase() 
+      );
+    });
+    pages(newArr);
+  },1000)
+
+ 
 });
 
 DELETE_SELECTED_BUTTON.addEventListener("click", () => {
@@ -122,11 +131,13 @@ const pages = (data) => {
   let prevButton = createHtmlTag("button", pagination);
   prevButton.innerHTML = "<";
   let currentPage = 0;
-  for (let pageNumber = 1; pageNumber <= totalPage; pageNumber++) {
+  for (var pageNumber = 1; pageNumber <= totalPage; pageNumber++) {
+    console.log("for loop -",pageNumber)
     let button = createHtmlTag("button", pagination);
     let start = (pageNumber - 1) * size;
     let end = start + size;
     button.addEventListener("click", () => {
+      console.log("Page Number",pageNumber)
       currentPage = pageNumber;
       pageData(start, end, data);
     });
